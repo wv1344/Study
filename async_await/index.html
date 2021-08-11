@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // // Generator 生成器函数
+    // function* foo(x) {
+    //   console.log('11')
+    //   yield x + 1 // 停下来，返回， 记录下执行状态
+    //   console.log('22')
+    //   yield x + 2
+    //   console.log('33')
+    //   return x + 3
+    // }
+
+    // let steps = foo(1)  // 执行器
+
+    // // 使用 steps.next() 执行，
+    // // 第一次执行，输出console，返回 { value: 2, done: false}
+    // // 第二次执行，输出console，返回 { value: 3, done: false}
+    // // 第三次执行，输出console，返回 { value: 4, done: true}
+    // for (let x of steps){
+    //   console.log(x)
+    // }
+
+    function ajax (url){
+      return fetch(url)
+        .then(data => data.json())
+        .then(data => genStep.next(data))   
+        // 这里将结果 放到 next 中，会将next中的data返回到上一次 yield 的左侧
+
+    }
+
+    function* steps () {   // 生成器函数
+      const data1 = yield ajax('https://api.github.com/users/wesbos');
+      console.log(data1)
+      const data2 = yield ajax('http://api.react.beer/v2/search?q=hops&type=beer')
+      console.log(data2)
+      const data3 = yield ajax('https://api.discogs.com/artists/51988')
+      console.log(data3)
+    } 
+
+    const genStep = steps()   // 生成器
+
+    genStep.next() 
+
+    function * helloGen(){
+      yield 'hello';
+      yield 'world';
+      return 'ending'
+    }
+    const hw = helloGen()
+
+    // hw.next() // {value: 'hello', done: false}
+    // hw.next() // {value: 'world', done: false}
+    // hw.next() // {value: 'ending', done: true}
+
+
+    // 不使用 yield， 就是正常的暂缓执行函数，就是在使用next的时候
+    // f()函数才会执行
+    function* f(){
+      console.log('GoGoGo')
+    }
+    var genF = f()
+
+    setTimeout(() => {
+      genF.next()
+    },2000)
+
+
+    function* demo() {
+      // console.log('Hello' + yield); // SyntaxError
+      // console.log('Hello' + yield 123); // SyntaxError
+
+      console.log('Hello' + (yield)); // OK
+      console.log('Hello' + (yield 123)); // OK
+    }
+
+    var demoGen = demo()
+
+    let myIterator = {}
+    myIterator[Symbol.iterator] = function* (){
+      yield 1;
+      yield 2;
+      yield 3;
+      yield 4;
+    }
+    console.log(myIterator)
+    console.log([...myIterator])
+
+    var arr = [8,8,8,9]
+    console.log(arr[Symbol.iterator]())
+    let iterator = arr[Symbol.iterator]()
+    console.log([...iterator])
+
+
+  </script>
+</body>
+</html>
