@@ -17,3 +17,12 @@ Promise.resolve().then(() => {
   console.log(6);
 })
 console.log(this)
+console.log(134235098)
+
+async function test(){
+  return false
+}
+
+
+
+console.log(test())
