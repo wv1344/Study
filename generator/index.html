@@ -11,14 +11,14 @@
 <body>
   <script>
     // // Generator 生成器函数
-    // function* foo(x) {
-    //   console.log('11')
-    //   yield x + 1 // 停下来，返回， 记录下执行状态
-    //   console.log('22')
-    //   yield x + 2
-    //   console.log('33')
-    //   return x + 3
-    // }
+    function* foo(x) {
+      console.log('11')
+      yield x + 1 // 停下来，返回， 记录下执行状态
+      console.log('22')
+      yield x + 2
+      console.log('33')
+      return x + 3
+    }
 
     // let steps = foo(1)  // 执行器
 
@@ -29,24 +29,20 @@
     // for (let x of steps){
     //   console.log(x)
     // }
-    var regex = /(\d{4})-(\d{2})-(\d{2})/;
-    var string = "2017-06-12";
-    console.log(string.match(regex))
 
     function ajax(url) {
       return fetch(url)
         .then(data => data.json())
         .then(data => genStep.next(data))
       // 这里将结果 放到 next 中，会将next中的data返回到上一次 yield 的左侧
-
     }
 
-    function test(){
-      ajax('https://api.github.com/users/wesbos')
-      ajax('http://api.react.beer/v2/search?q=hops&type=beer')
-      ajax('https://api.discogs.com/artists/51988')
-    }
-    test()
+    // function test(){
+    //   ajax('https://api.github.com/users/wesbos')
+    //   ajax('http://api.react.beer/v2/search?q=hops&type=beer')
+    //   ajax('https://api.discogs.com/artists/51988')
+    // }
+    // test()
 
     function* steps() {   // 生成器函数
       const data1 = yield ajax('https://api.github.com/users/wesbos');
@@ -58,6 +54,7 @@
       const data3 = yield ajax('https://api.discogs.com/artists/51988')
       console.log('data3')
       console.log(data3)
+      yield* foo()
     }
 
     const genStep = steps()   // 生成器
@@ -113,6 +110,7 @@
     console.log(arr[Symbol.iterator]())
     let iterator = arr[Symbol.iterator]()
     console.log([...iterator])
+
 
   </script>
 </body>
